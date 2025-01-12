@@ -82,6 +82,7 @@ def main():
             st.write(f"Total Yearly Dividends: ")
             st.subheader(f":green[${total_yearly_dividends:.2f}]")
             st.write("")
+
             st.write(f"Average Monthly Dividends: ")
             st.subheader(f":green[${(total_yearly_dividends / 12):.2f}]")
 
