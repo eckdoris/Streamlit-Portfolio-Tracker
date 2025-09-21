@@ -140,3 +140,52 @@ def main():
 
 if __name__ == "__main__":
     main()
+# --- Dividenden-Funktion ---
+import matplotlib.pyplot as plt
+
+def load_dividenden():
+    try:
+        df = pd.read_csv("portfolio.csv")
+    except FileNotFoundError:
+        st.error("❌ portfolio.csv nicht gefunden.")
+        return pd.DataFrame()
+
+    if "Dividende_pro_Aktie" not in df.columns:
+        st.warning("⚠️ portfolio.csv muss eine Spalte 'Dividende_pro_Aktie' enthalten.")
+        return pd.DataFrame()
+
+    df["Dividende_Jahr"] = df["Shares"] * df["Dividende_pro_Aktie"]
+    df["Dividende_Monat"] = df["Dividende_Jahr"] / 12
+    return df
+
+dividenden_df = load_dividenden()
+
+# --- Neuer Tab für Dividenden ---
+with st.sidebar:
+    menu = st.radio("Menü", ["Portfolio", "Dividenden"])
+
+if menu == "Dividenden":
+    st.header("💰 Dividenden Übersicht")
+
+    if not dividenden_df.empty:
+        tab1, tab2 = st.tabs(["📆 Jährlich", "📅 Monatlich"])
+
+        with tab1:
+            st.subheader("📆 Jährliche Dividenden")
+            st.dataframe(dividenden_df[["Ticker", "Shares", "Dividende_Jahr"]])
+            plt.figure(figsize=(8,4))
+            plt.bar(dividenden_df["Ticker"], dividenden_df["Dividende_Jahr"])
+            plt.ylabel("Dividenden (€)")
+            plt.title("Jährliche Dividenden")
+            st.pyplot(plt)
+
+        with tab2:
+            st.subheader("📅 Monatliche Dividenden")
+            st.dataframe(dividenden_df[["Ticker", "Shares", "Dividende_Monat"]])
+            plt.figure(figsize=(8,4))
+            plt.bar(dividenden_df["Ticker"], dividenden_df["Dividende_Monat"])
+            plt.ylabel("Dividenden (€ pro Monat)")
+            plt.title("Monatliche Dividenden")
+            st.pyplot(plt)
+    else:
+        st.info("Noch keine Dividenden-Daten vorhanden.")
