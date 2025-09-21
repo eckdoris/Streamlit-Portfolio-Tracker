@@ -145,7 +145,16 @@ import matplotlib.pyplot as plt
 
 def load_dividenden():
     try:
-        df = pd.read_csv("portfolio.csv")
+        # === Portfolio laden ===
+uploaded_file = st.file_uploader("📂 Lade deine portfolio.csv hoch", type="csv")
+
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
+    st.success("✅ Datei erfolgreich geladen!")
+    st.dataframe(df)  # zeigt Tabelle an
+else:
+    st.warning("⚠️ Bitte lade eine portfolio.csv hoch, um fortzufahren.")
+    st.stop()
     except FileNotFoundError:
         st.error("❌ portfolio.csv nicht gefunden.")
         return pd.DataFrame()
