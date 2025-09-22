@@ -148,10 +148,10 @@ def load_dividenden():
         # === Portfolio laden ===
         uploaded_file = st.file_uploader("📂 Lade dein Portfolio hoch", type=["xlsx", "csv"])
 
-         if uploaded_file is not None:
+        if uploaded_file is not None:
             if uploaded_file.name.endswith(".xlsx"):
                portfolio = pd.read_excel(uploaded_file)
-        else:
+            else:
             portfolio = pd.read_csv(uploaded_file)
     except FileNotFoundError:
         st.error("❌ portfolio.csv nicht gefunden.")
